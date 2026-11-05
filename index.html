@@ -149,9 +149,7 @@ td.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-spa
 .mctl button{width:40px;height:36px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);font:500 18px/1 var(--font-body);cursor:pointer;box-shadow:0 1px 3px rgba(20,30,50,.15);padding:0}
 .mctl button.txt{font-size:11.5px;letter-spacing:.02em}
 .mctl button.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.leaflet-container{background:#E9ECEF}
-.mapbox.soft .leaflet-tile-pane{filter:saturate(.3) brightness(1.06) contrast(.88)}
-.leaflet-control-attribution{font-size:10.5px}
+.leaflet-container{background:#E9ECEF}.leaflet-control-attribution{font-size:10.5px}
 .route{transition:opacity .2s}
 .mapbox.focus .route{opacity:.12}
 .mapbox.focus .route.on{opacity:1}
@@ -217,7 +215,7 @@ td.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-spa
   </nav>
 
   <main id="view"></main>
-  <p class="foot">勾選狀態只存在這支手機（或這台電腦）的瀏覽器裡。營業時間與票價以 2026 年 11 月查詢結果為準，出發前請再確認。地圖資料 © OpenStreetMap 貢獻者。</p>
+  <p class="foot">勾選狀態只存在這支手機（或這台電腦）的瀏覽器裡。營業時間與票價以 2026 年 11 月查詢結果為準，出發前請再確認。底圖：國土地理院（地理院タイル）。</p>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -512,14 +510,13 @@ function initMap(){
   }
   const map = L.map('map', { zoomControl:false, attributionControl:true, tap:true, zoomSnap:0.5, worldCopyJump:false });
   map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
-  /* OpenStreetMap tiles need no API key; the minimal look is a CSS filter (class "soft" on the map box). */
-  const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:19,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者' });
+  /* GSI (Geospatial Information Authority of Japan) tiles: free, no API key. "pale" = light map, "std" = standard map. */
+  const gsiAttr = '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">地理院タイル</a>';
+  const light = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', { minZoom:5, maxNativeZoom:18, maxZoom:19, attribution:gsiAttr });
+  const detail = L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', { minZoom:5, maxNativeZoom:18, maxZoom:19, attribution:gsiAttr });
   if(lastView) map.setView(lastView.c, lastView.z, {animate:false});
   else map.fitBounds(L.latLngBounds(CITY.map(id=>PTS[id].ll)), { paddingTopLeft:[20,64], paddingBottomRight:[60,24] });
-  tiles.addTo(map);
-  box.classList.toggle('soft', !baseDetail);
+  (baseDetail ? detail : light).addTo(map);
 
   const m = { map, box, markers:[], routes:{}, me:null };
   MAP = m;
@@ -568,7 +565,7 @@ function initMap(){
       else if(c==='me') map.locate({ setView:true, maxZoom:16, enableHighAccuracy:true });
       else if(c==='base'){
         baseDetail = !baseDetail; store.set('base', baseDetail);
-        box.classList.toggle('soft', !baseDetail);
+        if(baseDetail){ map.removeLayer(light); detail.addTo(map); } else { map.removeLayer(detail); light.addTo(map); }
         b.classList.toggle('on', baseDetail); b.setAttribute('aria-pressed', baseDetail);
       }
     });

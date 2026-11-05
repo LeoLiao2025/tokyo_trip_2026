@@ -206,7 +206,7 @@ td.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-spa
     <div class="facts">
       <span class="fact">住宿 <b>AKABANEHOLIC HOTEL</b>（赤羽）</span>
       <span class="fact">行李 <b>29 吋 × 3</b></span>
-      <span class="fact">成田抵達 <b>12:35</b></span>
+      <span class="fact">成田第 2 航廈抵達 <b>12:35</b></span>
     </div>
   </header>
 
@@ -236,15 +236,17 @@ const DAYS = [
      {t:'Skyliner 線上票要在出發前一天以前買，到成田再換成實體票並劃位。', info:true}
    ],
    items:[
-    {type:'stop', t:'12:35', mp:'narita', title:'抵達成田機場', dur:'約 1h 出關',
+    {type:'stop', t:'12:35', mp:'narita', title:'抵達成田機場第 2 航廈', dur:'約 1h 出關',
       notes:['出關後到 Skyliner 櫃台或售票機，把線上票 QR Code 換成實體票','選最近一班，車上有大型行李放置區']},
-    {type:'move', t:'13:50', end:'14:30', legs:[['Skyliner',C.sky]], from:'成田機場', to:'日暮里', dur:'約 40 分',
-      tips:['搭車站看航廈：第 1 航廈是「成田空港」站；第 2、3 航廈是「空港第2ビル」站（第 3 航廈要先走約 10–15 分或搭免費接駁車到第 2 航廈）',
-            '入境後跟著「鉄道 Railways」指標往地下 1 樓，找京成售票處（Ticket center）旁的 Skyliner 售票機（2024 年筆記：在全家便利商店後面）',
+    {type:'move', t:'13:50', end:'14:30', legs:[['Skyliner',C.sky]], from:'空港第2ビル', to:'日暮里', dur:'約 40 分',
+      tips:['第 2 航廈下機，車站是「空港第2ビル」站，就在航廈地下 1 樓',
+            '入境大廳（1 樓）出來後，正前方的手扶梯往下到地下 1 樓就是車站，南北兩側出口都一樣',
+            '背對航廈時，前面是 JR 閘門、後面是京成閘門；京成售票處（Ticket center）和 Skyliner 售票機在京成閘門旁（2024 年筆記：在全家便利商店後面）',
+            '幾班飛機同時抵達時售票機會排隊，線上票換票要預留時間',
             '在售票機掃描線上票的 QR Code 換票並選座位；第一排或最後一排靠近行李放置區',
             '線上票已含車資：換出的票若是 2 張（乘車券＋Skyliner 券），疊在一起插入閘門；只有 1 張就直接插入。京成這段不用刷 Suica',
             '萬一換出的票只有 Skyliner 券（沒有乘車券），代表車資要另付：先插票、再刷 Suica，不確定就問站務員',
-            '月台以現場螢幕為準（2024 年筆記：成田空港站 5 號月台）',
+            'Skyliner 往上野方向在「1 號月台」（成田スカイアクセス線）；3 號月台是京成本線的一般列車，不要搭錯',
             '另有「Face Check in Go」臉部辨識可以免換票，但不能自己選座位，所以這趟用 QR 換票就好',
             '每班 Skyliner 都停日暮里；線上票 2,310 日圓（現場 2,580 日圓），購買後 6 個月內有效，最晚前一天要買好']},
     {type:'move', t:'14:35', end:'14:55', legs:[['JR 山手線（外回り）',C.yamanote]], from:'日暮里', to:'新橋', dur:'約 20 分',
@@ -334,7 +336,7 @@ const DAYS = [
 
 /* Coordinates: shops and lodging from the user's Google Maps list; stations from public data. */
 const PTS = {
-  narita:{name:'成田機場', ll:[35.7647,140.3864], kind:'main', far:true, gq:'成田空港駅'},
+  narita:{name:'成田機場 第 2 航廈', ll:[35.7733,140.3875], kind:'main', far:true, gq:'空港第2ビル駅'},
   divercity:{name:'台場 DiverCity', ll:[35.625746,139.776427], kind:'main', gq:'ダイバーシティ東京 プラザ'},
   akabane:{name:'赤羽・AKABANEHOLIC', ll:[35.778087,139.722215], kind:'main', gq:'AKABANEHOLIC HOTEL'},
   koami:{name:'小網神社', ll:[35.684093,139.780516], kind:'main', gq:'小網神社'},

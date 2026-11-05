@@ -150,6 +150,7 @@ td.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-spa
 .mctl button.txt{font-size:11.5px;letter-spacing:.02em}
 .mctl button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .leaflet-container{background:#E9ECEF}
+.mapbox.soft .leaflet-tile-pane{filter:saturate(.3) brightness(1.06) contrast(.88)}
 .leaflet-control-attribution{font-size:10.5px}
 .route{transition:opacity .2s}
 .mapbox.focus .route{opacity:.12}
@@ -511,15 +512,14 @@ function initMap(){
   }
   const map = L.map('map', { zoomControl:false, attributionControl:true, tap:true, zoomSnap:0.5, worldCopyJump:false });
   map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
-  const light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    subdomains:'abcd', maxZoom:20,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>' });
-  const detail = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  /* OpenStreetMap tiles need no API key; the minimal look is a CSS filter (class "soft" on the map box). */
+  const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom:19,
-    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>' });
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> 貢獻者' });
   if(lastView) map.setView(lastView.c, lastView.z, {animate:false});
   else map.fitBounds(L.latLngBounds(CITY.map(id=>PTS[id].ll)), { paddingTopLeft:[20,64], paddingBottomRight:[60,24] });
-  (baseDetail ? detail : light).addTo(map);
+  tiles.addTo(map);
+  box.classList.toggle('soft', !baseDetail);
 
   const m = { map, box, markers:[], routes:{}, me:null };
   MAP = m;
@@ -568,7 +568,7 @@ function initMap(){
       else if(c==='me') map.locate({ setView:true, maxZoom:16, enableHighAccuracy:true });
       else if(c==='base'){
         baseDetail = !baseDetail; store.set('base', baseDetail);
-        if(baseDetail){ map.removeLayer(light); detail.addTo(map); } else { map.removeLayer(detail); light.addTo(map); }
+        box.classList.toggle('soft', !baseDetail);
         b.classList.toggle('on', baseDetail); b.setAttribute('aria-pressed', baseDetail);
       }
     });
